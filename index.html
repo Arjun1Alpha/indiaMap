@@ -9,8 +9,35 @@
         margin: 0;
         padding: 0;
         box-sizing: border-box;
-        transition: all 0.8s;
+        transition: all 0.5s;
       }
+      #infoContainer.active{
+        display: block;
+      }
+      #infoContainer{
+        position: fixed;
+        display: none;
+        right: 40vw;
+        padding: 10px 20px;
+        max-width: 300px;
+        border-radius: 10px;
+        background-color: rgba(211, 211, 220, 0.05) ;
+        box-shadow: 0px 0px 5px rgb(211, 211, 220);
+        /* z-index: 111; */
+        font-family: 'Courier New', Courier, monospace;
+        bottom: 20vh;
+      }
+      #follower {
+        position: absolute;
+        padding: 8px 24px;
+        background-color: black;
+        border-radius: 5px;
+        transition: all 0.1s;
+        display: none;
+        color: white;
+        font-weight: 600;
+        font-family: 'Courier New', Courier, monospace;
+    }
       .container {
         display: flex;
         height: 100vh;
@@ -37,7 +64,7 @@
       }
       .highlight {
         position: relative;
-        fill: plum !important;
+        fill: rgb(151, 135, 151) !important;
         display: block !important;
       }
       .highlight::after {
@@ -87,8 +114,9 @@
       </div>
       <div>
         <svg
+          id="meraIndia"
           baseprofile="tiny"
-          fill="#80808075"
+          fill="#80808050"
           height="1000"
           stroke="#ffffff"
           stroke-linecap="round"
@@ -591,7 +619,11 @@
         </svg>
       </div>
     </div>
-
+    <div id="follower"></div>
+    <div id="infoContainer">
+      <h3>I love India</h3>
+      <p></p>
+    </div>
     <script>
       //     function toggleClass() {
       //     var element = document.getElementById("text");
@@ -606,31 +638,62 @@
       //     console.log(arr);
       //   });
 
+      let meraIndia = document.querySelector("#meraIndia");
+      var follower = document.getElementById("follower");
+      var infoContainer = document.querySelector("#infoContainer");
+      var infoContainerData = document.querySelector("#infoContainer p");
+      meraIndia.addEventListener("mousemove", function(e) {
+        var x = e.clientX + 10;
+        var y = e.clientY + 5;
+        follower.style.left = x + "px";
+        follower.style.top = y + "px";
+      });
+
       document.querySelectorAll("path").forEach((item) => {
         item.addEventListener("click", (event) => {
           document.querySelectorAll(".highlight").forEach((highlightedItem) => {
             highlightedItem?.classList.remove("highlight");
           });
+          
           if (item.getAttribute("class").includes("highlight")) {
             item.setAttribute(
               "class",
               item.getAttribute("class").replace("highlight", "")
             );
+            
           } else {
             item.setAttribute(
               "class",
               item.getAttribute("class") + " highlight"
             );
+            // console.log(item.getAttribute("name"));
+            // if (infoContainer.style.display == "block") {
+              infoContainer.classList.toggle("active");
+            // }
+            // item.classList.toggle("highlight");
+            infoContainerData.innerText = item.getAttribute("name");
+            // const messages = [
+            //   "kya hua galti se click hua",
+            //   "wait kar raha hu koi dusra select kar"
+            // ];
+
+            // setInterval(() => {
+            //   infoContainer.innerText = messages[counter % messages.length];
+            //   counter++;
+            // }, 5000);
           }
         });
       });
 
       document.querySelectorAll("path").forEach((item) => {
         item.addEventListener("mouseenter", () => {
+          follower.style.display = "block";
+          follower.innerText = item.getAttribute("name");
           item.classList.add("hoverHighlight");
         });
-
+        
         item.addEventListener("mouseleave", () => {
+          follower.style.display = "none";
           item.classList.remove("hoverHighlight");
         });
       });
